@@ -55,12 +55,8 @@ regiment = [caserne() for i in range(n)]
 
 for caserne in regiment:
     L = [[caserne.x,caserne.y]]
-    while [caserne.x , caserne.y] in L:
-        print(L)
-        print(caserne.x,caserne.y)
-        caserne.x , caserne.y = randint(1,n) , randint(1,n)
-        print('toto')
-    L = L + [[caserne.x , caserne.y]]
+    if [caserne.x,caserne.y] not in L:
+        L += 
 
 
 

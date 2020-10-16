@@ -4,8 +4,7 @@ dans la matrice de telle sorte que tout point de la matrice soit
 
 from random import *
 
-
-n = 20
+n = 10
 M = [[(i,j) for j in range(n)] for i in range(n)]
 
 def distance_a_la_diago(i,j): 
@@ -45,33 +44,59 @@ def RechercheDeSolution (M,k,distance,nbr_test): #M une matrice, d une distance 
     MeilleureConfiguration=[]
     MeilleureMoyenne = -1
 
-    for geoffrey in range(nbr_test): #On test nbr_test fois
+    for J in range(nbr_test): #On test nbr_test fois
         Points = [[randint(0,n),randint(0,n)]] #On met un point dans la liste
-        i,j=0,0
-
+        i=0
         while len(Points) < k : #On veut mettre k points dans la liste
             x,y = randint(0,n),randint(0,n)
             if [x,y] not in Points :
                 Points.append([x,y])
-            if i%1000 == 0: 
-                print(i)
-            i=i+1
         #On a désormais une liste de points distincts que l'on stocke au cas ou elle serait cool
         Moyennes=[moyenne_aux_points(Points[i],M,distance_man) for i in range(k)]
         MoyenneGlobale = moyenne_de_liste(Moyennes)
-        if MoyenneGlobale > MeilleureMoyenne or MeilleureMoyenne < 0:
+        if MoyenneGlobale < MeilleureMoyenne or MeilleureMoyenne < 0:
             MeilleureMoyenne = MoyenneGlobale
             MeilleureConfiguration = Points
+        if J%100 == 0: print(J)
+
+
+        """Résultats et problèmes:
+        On trouve pour k=3 et M : 10x10, trois points au centre de la matrice
+        ([[4, 4], [5, 5], [4, 5]], 5.0)
+        ce qui est mathématiquement correcte mais pas optimal dans la réalité, en effet
+        toutes les casernes seront collées à un points du centre. """
     return MeilleureConfiguration , MeilleureMoyenne
 
-Test = RechercheDeSolution(M,3,distance_man,100000)
+def Interdistance (X,ListeDePoints,interdistance,distance): #return un booléen
+    for point in ListeDePoints:
+        if distance(X,point) > interdistance : return False
+    return True
+
+def RechercheDeSolution_V2 (M,k,distance, interdistance,nbr_test): #M une matrice, d une distance k nombre de points
+    """On va faire la moyenne des moyennes des distances aux points de la matrice"""
+    #La distance maximale pour d est d = 2n pour manhatann
+    MeilleureConfiguration=[]
+    MeilleureMoyenne = -1
+
+    for J in range(nbr_test): #On test nbr_test fois
+        Points = [[randint(0,n),randint(0,n)]] #On met un point dans la liste
+        i=0
+        while len(Points) < k : #On veut mettre k points dans la liste
+            x,y = randint(0,n),randint(0,n)
+            if [x,y] not in Points and Interdistance([x,y],Points,interdistance,distance_man) :
+                Points.append([x,y])
+        #On a désormais une liste de points distincts que l'on stocke au cas ou elle serait cool
+        Moyennes=[moyenne_aux_points(Points[i],M,distance_man) for i in range(k)]
+        MoyenneGlobale = moyenne_de_liste(Moyennes)
+        if MoyenneGlobale < MeilleureMoyenne or MeilleureMoyenne < 0:
+            MeilleureMoyenne = MoyenneGlobale
+            MeilleureConfiguration = Points
+        if J%100 == 0: print(J)
+    return MeilleureConfiguration , MeilleureMoyenne
+       
+
+Test = RechercheDeSolution_V2(M,3,distance_man,6,10000)
 print(Test)
-    
-
-        
-    
-
-        
     
 
     

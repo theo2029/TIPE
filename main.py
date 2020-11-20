@@ -1,4 +1,4 @@
-from random import *
+from random import randint
 
 N = 10 #taille de la ville
 n = 10 #nombre de caserne
@@ -52,14 +52,4 @@ def Coord(n):
 regiment = [caserne() for i in range(n)]
 
 
-
-for caserne in regiment:
-    L = [[caserne.x,caserne.y]]
-    if [caserne.x,caserne.y] not in L:
-        L += 
-
-
-
-
-print(L)
 print(len(regiment))

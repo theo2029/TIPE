@@ -1,6 +1,6 @@
 """ Pour une matrice (n,n) on cherchera comment placer k points 
 dans la matrice de telle sorte que tout point de la matrice soit
-à une distance minimal d'un point k"""
+à une distance minimal d'un des points 'k'."""
 
 from random import randint
 import matplotlib.pyplot as plt
@@ -8,9 +8,10 @@ from time import time
 import os
 import copy
 
-n = 100
+
+n = 75
 M = [[(i,j) for j in range(n)] for i in range(n)]
-densite = [[0 for i in range(n)] for j in range(n)] #villeDe0
+densite = [[0 for i in range(n)] for j in range(n)] #ville De zéros (VDZ).
 os.chdir('C:/Users/Théo/Documents/GitHub/TIPE')
 
 def num_photo ():
@@ -41,7 +42,7 @@ def moyenne_aux_points(X,M,distance): #M est la matrice ville, X un point de la 
     L = []
     for i in range(n):
         for j in range(n):
-            if [i,j] != X: #Le point X=(i,j) ne compte pas lui même dans la moyenne.
+            if [i,j] != X: #Le point X=(i,j) ne compte pas lui-même dans la moyenne.
                 L = L + [distance([i,j] ,X )]
     return moyenne_de_liste(L)
 
@@ -69,9 +70,12 @@ def RechercheDeSolution (M,k,distance,nbr_test): #M une matrice, d une distance 
     return MeilleureConfiguration , MeilleureMoyenne
 
 """Résultats et problèmes:
-On trouve pour k=3 et M : 10x10, trois points au centre de la matrice 
-([[4, 4], [5, 5], [4, 5]], 5.0) ce qui est mathématiquement correcte mais pas optimal dans
- la réalité, en effet toutes les casernes seront collées à un points du centre. """
+On trouve pour k=3 et M : 10x10, trois points au centre de la matrice ([[4, 4], [5, 5], [4, 5]], 5.0) 
+ce qui est mathématiquement correct mais pas optimal dans la réalité, en effet toutes les casernes ne 
+seraient pas collées à un points du centre dans la réalité.. """
+
+"""On introduit alors la notion d'interdistance entre les casernes,
+distance minimale que devra avoir une caserne a n'importte quelle autre caserne."""
 
 def Interdistance (X,ListeDePoints,interdistance,distance): #return un booléen
     for point in ListeDePoints:
@@ -110,13 +114,13 @@ def Affichage_Sauvegarde(Liste):
             j = point[1]
             VDZ[i][j] += 1
         
-        interdistance=Test[2];k=Test[3];nbr_test=Test[4] #oui
+        interdistance=Test[2];k=Test[3];nbr_test=Test[4] #oui, sortie de Recherche_V2
 
         plt.imshow(VDZ, extent=[0,n,0,n], aspect="auto")
         plt.title("n="+str(n)+",k="+str(k)+",inter="+str(interdistance)+',boucles='+str(nbr_test))
         plt.savefig("Figures/"+str(num_photo())+'.png')
         VDZ = copy.deepcopy(densite)
 
-D = [RechercheDeSolution_V2(M,6,distance_man,35,5000) for i in range(1)]
+D = [RechercheDeSolution_V2(M,5,distance_man,35,5000) for i in range(1)]
 print(D)
 Affichage_Sauvegarde(D)
